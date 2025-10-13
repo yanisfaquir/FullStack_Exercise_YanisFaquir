@@ -32,10 +32,10 @@
     </dependencyManagement>
 
     <dependencies>
-        <!-- Quarkus RESTEasy Reactive -->
+        <!-- Quarkus REST with Jackson -->
         <dependency>
             <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-resteasy-reactive-jackson</artifactId>
+            <artifactId>quarkus-rest-jackson</artifactId>
         </dependency>
 
         <!-- OpenAPI/Swagger -->
