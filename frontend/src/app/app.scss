@@ -1,0 +1,357 @@
+// Variables
+$primary-color: #007bff;
+$secondary-color: #6c757d;
+$success-color: #28a745;
+$error-color: #dc3545;
+$warning-color: #ffc107;
+$light-bg: #f8f9fa;
+$dark-text: #212529;
+$border-color: #dee2e6;
+
+// Container
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+// Header
+.header {
+  text-align: center;
+  margin-bottom: 40px;
+  padding: 30px 20px;
+  background: linear-gradient(135deg, $primary-color 0%, #0056b3 100%);
+  color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  h1 {
+    margin: 0 0 10px 0;
+    font-size: 2.5em;
+    font-weight: 600;
+  }
+
+  .subtitle {
+    margin: 0 0 15px 0;
+    font-size: 1.1em;
+    opacity: 0.9;
+  }
+
+  .api-status {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9em;
+    font-weight: 500;
+    background: rgba(255, 255, 255, 0.2);
+
+    &.connected {
+      background: rgba(40, 167, 69, 0.3);
+    }
+
+    &.disconnected {
+      background: rgba(220, 53, 69, 0.3);
+    }
+  }
+}
+
+// Main Content
+.main-content {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 30px;
+
+  @media (min-width: 768px) {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+
+// Card
+.card {
+  background: white;
+  border-radius: 10px;
+  padding: 30px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  h2 {
+    margin: 0 0 20px 0;
+    color: $dark-text;
+    font-size: 1.5em;
+  }
+}
+
+// Calculator Card
+.calculator-card {
+  .info-box {
+    background: $light-bg;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    border-left: 4px solid $primary-color;
+
+    strong {
+      display: block;
+      margin-bottom: 10px;
+      color: $primary-color;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 20px;
+
+      li {
+        margin: 5px 0;
+        font-family: 'Courier New', monospace;
+      }
+    }
+  }
+
+  .calculator-form {
+    margin-bottom: 25px;
+
+    .form-group {
+      margin-bottom: 20px;
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: $dark-text;
+      }
+
+      .form-control {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid $border-color;
+        border-radius: 6px;
+        font-size: 1em;
+        transition: border-color 0.3s;
+
+        &:focus {
+          outline: none;
+          border-color: $primary-color;
+        }
+
+        &:disabled {
+          background: $light-bg;
+          cursor: not-allowed;
+        }
+      }
+    }
+
+    .button-group {
+      display: flex;
+      gap: 10px;
+    }
+  }
+}
+
+// Buttons
+.btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1em;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &.btn-primary {
+    background: $primary-color;
+    color: white;
+
+    &:hover:not(:disabled) {
+      background: #0056b3;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+    }
+  }
+
+  &.btn-secondary {
+    background: $secondary-color;
+    color: white;
+
+    &:hover:not(:disabled) {
+      background: #545b62;
+    }
+  }
+
+  &.btn-clear {
+    padding: 8px 16px;
+    background: transparent;
+    color: $error-color;
+    border: 1px solid $error-color;
+    font-size: 0.9em;
+
+    &:hover {
+      background: $error-color;
+      color: white;
+    }
+  }
+}
+
+// Alert
+.alert {
+  padding: 15px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+
+  &.alert-error {
+    background: #f8d7da;
+    color: #721c24;
+    border-left: 4px solid $error-color;
+
+    strong {
+      font-weight: 600;
+    }
+  }
+}
+
+// Result
+.result-container {
+  margin-top: 25px;
+  animation: fadeIn 0.5s;
+
+  h3 {
+    margin: 0 0 15px 0;
+    color: $dark-text;
+  }
+
+  .result-card {
+    background: $light-bg;
+    padding: 20px;
+    border-radius: 8px;
+    border: 2px solid $success-color;
+
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid $border-color;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .result-label {
+        font-weight: 500;
+        color: $secondary-color;
+      }
+
+      .result-value {
+        font-weight: 600;
+        color: $dark-text;
+
+        &.highlight {
+          color: $success-color;
+          font-size: 1.2em;
+          font-family: 'Courier New', monospace;
+        }
+
+        &.cached {
+          color: $warning-color;
+        }
+      }
+    }
+  }
+}
+
+// History Card
+.history-card {
+  .history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+
+    h2 {
+      margin: 0;
+    }
+  }
+
+  .history-list {
+    max-height: 500px;
+    overflow-y: auto;
+
+    .history-item {
+      padding: 15px;
+      margin-bottom: 10px;
+      background: $light-bg;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s;
+
+      &:hover {
+        background: #e9ecef;
+        transform: translateX(5px);
+      }
+
+      .history-main {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+
+        .history-index {
+          font-weight: 600;
+          color: $primary-color;
+        }
+
+        .history-value {
+          font-family: 'Courier New', monospace;
+          color: $dark-text;
+        }
+      }
+
+      .history-meta {
+        display: flex;
+        gap: 15px;
+        font-size: 0.85em;
+        color: $secondary-color;
+
+        .history-cache {
+          color: $warning-color;
+        }
+      }
+    }
+  }
+}
+
+// Footer
+.footer {
+  text-align: center;
+  margin-top: 40px;
+  padding: 20px;
+  color: $secondary-color;
+
+  p {
+    margin: 0 0 10px 0;
+  }
+
+  .swagger-link {
+    color: $primary-color;
+    text-decoration: none;
+    font-weight: 500;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+// Animations
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
