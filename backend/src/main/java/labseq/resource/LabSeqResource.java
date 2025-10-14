@@ -25,6 +25,9 @@ import java.math.BigInteger;
 public class LabSeqResource {
 
     private static final Logger LOG = Logger.getLogger(LabSeqResource.class);
+    
+    // Limite para usar recursão vs iterativo
+    private static final int RECURSIVE_THRESHOLD = 3000;
 
     @Inject
     LabSeqService labSeqService;
@@ -35,7 +38,8 @@ public class LabSeqResource {
     @Operation(
         summary = "Get LabSeq value",
         description = "Calculates and returns the value of the LabSeq sequence at the given index. " +
-                     "Uses caching to improve performance for repeated calculations."
+                     "Uses caching to improve performance for repeated calculations. " +
+                     "Automatically switches to iterative method for large values (n > 5000)."
     )
     @APIResponses(value = {
         @APIResponse(
@@ -67,8 +71,18 @@ public class LabSeqResource {
 
         long startTime = System.currentTimeMillis();
         
-        // Calculate the value
-        BigInteger value = labSeqService.calculate(n);
+        BigInteger value;
+        boolean usedIterative = false;
+        
+        // Escolhe método baseado no tamanho de n
+        if (n > RECURSIVE_THRESHOLD) {
+            LOG.infof("Using iterative method for large n=%d", n);
+            value = labSeqService.calculateIterative(n);
+            usedIterative = true;
+        } else {
+            // Para valores pequenos, usa recursão com cache
+            value = labSeqService.calculate(n);
+        }
         
         long endTime = System.currentTimeMillis();
         long calculationTime = endTime - startTime;
@@ -78,10 +92,11 @@ public class LabSeqResource {
             n,
             value,
             calculationTime,
-            calculationTime < 5 // Heuristic: if calculated in < 5ms, likely from cache
+            calculationTime < 5 && !usedIterative // Heuristic: if calculated in < 5ms and not iterative, likely from cache
         );
 
-        LOG.infof("LabSeq(%d) = %s (calculated in %dms)", n, value, calculationTime);
+        LOG.infof("LabSeq(%d) = %s (calculated in %dms, method: %s)", 
+            n, value, calculationTime, usedIterative ? "iterative" : "recursive+cache");
 
         return Response.ok(response).build();
     }
