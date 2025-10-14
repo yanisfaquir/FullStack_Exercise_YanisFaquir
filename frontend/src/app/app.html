@@ -44,10 +44,12 @@
 
         <div class="button-group">
           <button type="submit" class="btn btn-primary" [disabled]="loading || inputValue === null">
-            <span *ngIf="!loading">Calculate</span>
-            <span *ngIf="loading">
+            @if (!loading) {
+               <span>Calculate</span>
+            }
+            @if (loading) {
               <span class="spinner"></span> Calculating...
-            </span>
+            }
           </button>
           <button type="button" class="btn btn-secondary" (click)="reset()" [disabled]="loading">
             Reset
@@ -56,12 +58,15 @@
       </form>
 
       <!-- Error Message -->
-      <div *ngIf="error" class="alert alert-error">
-        <strong>⚠️ Error:</strong> {{ error }}
-      </div>
-
+       @if (error) {
+        <div class="alert alert-error">
+          <strong>⚠️ Error:</strong> {{ error }}
+        </div>
+      }
+  
       <!-- Result -->
-      <div *ngIf="result" class="result-container">
+    @if (result) {
+      <div class="result-container">
         <h3>📊 Result</h3>
         <div class="result-card">
           <div class="result-row">
@@ -74,7 +79,7 @@
             <span class="result-label">Value:</span>
             <app-number-display 
               [value]="result.value" 
-             >
+              [digits]="result.digits">
             </app-number-display>
           </div>
           
@@ -90,32 +95,41 @@
           </div>
         </div>
       </div>
+    }
+   
     </div>
 
     <!-- History Card -->
-    <div class="card history-card" *ngIf="history.length > 0">
-      <div class="history-header">
-        <h2>📜 Calculation History</h2>
-        <button class="btn btn-clear" (click)="clearHistory()">Clear History</button>
-      </div>
+      @if (history.length > 0) {
+      <div class="card history-card">
+        <div class="history-header">
+          <h2>📜 Calculation History</h2>
+          <button class="btn btn-clear" (click)="clearHistory()">Clear History</button>
+        </div>
+        
       
       <div class="history-list">
-        <div *ngFor="let item of history" class="history-item" (click)="loadFromHistory(item.n)">
-          <div class="history-main">
-            <span class="history-index">n = {{ item.n }}</span>
-            <span class="history-value" [title]="item.value">
-              {{ item.digits <= 30 ? item.value : (item.value | slice:0:30) + '...' }}
-            </span>
-            <span class="history-digits">{{ item.digits }} digits</span>
+        @for (item of history; track item.n) {
+          <div class="history-item" (click)="loadFromHistory(item.n)">
+            <div class="history-main">
+              <span class="history-index">n = {{ item.n }}</span>
+              <span class="history-value" [title]="item.value">
+                {{ item.digits <= 30 ? item.value : (item.value | slice:0:30) + '...' }}
+              </span>
+              <span class="history-digits">{{ item.digits }} digits</span>
+            </div>
+            <div class="history-meta">
+              <span class="history-time">⏱️ {{ item.calculationTime }}ms</span>
+              @if (item.fromCache) {
+                <span class="history-cache">📦 Cached</span>
+              }
+              <span class="history-timestamp">{{ item.timestamp | date:'short' }}</span>
+            </div>
           </div>
-          <div class="history-meta">
-            <span class="history-time">⏱️ {{ item.calculationTime }}ms</span>
-            <span class="history-cache" *ngIf="item.fromCache">📦 Cached</span>
-            <span class="history-timestamp">{{ item.timestamp | date:'short' }}</span>
-          </div>
-        </div>
+        }
       </div>
     </div>
+  }
   </main>
 
   <!-- Footer -->
