@@ -102,10 +102,9 @@ addToHistory(response: LabSeqResponse): void {
     timestamp: new Date()
   };
 
-  // ⬇️ ADICIONE ESTE LOG ⬇️
-  console.log('📊 Adding to history:', historyItem);
-
+  this.history = this.history.filter(item => item.n !== response.n);
   this.history.unshift(historyItem);
+
   
   if (this.history.length > 10) {
     this.history = this.history.slice(0, 10);
