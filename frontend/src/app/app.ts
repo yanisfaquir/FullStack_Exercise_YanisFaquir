@@ -1,28 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { LabseqService, LabSeqResponse } from './services/labseq.service';
-import { NumberDisplayComponent } from './components/number-display/number-display.component';
+import { HeaderComponent } from './components/header/header';
+import { CalculatorComponent } from './components/calculator/calculator';
+import { HistoryComponent, CalculationHistory } from './components/history/history';
 import { SequenceChartComponent } from './components/sequence-chart/sequence-chart.component';
-
-interface CalculationHistory {
-  n: number;
-  value: string;
-  calculationTime: number;
-  fromCache: boolean;
-  digits: number;
-  timestamp: Date;
-}
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
-    CommonModule, 
-    FormsModule, 
+    CommonModule,
     HttpClientModule,
-    NumberDisplayComponent, 
+    HeaderComponent,
+    CalculatorComponent,
+    HistoryComponent,
     SequenceChartComponent
   ],
   providers: [LabseqService],
@@ -31,14 +24,9 @@ interface CalculationHistory {
 })
 export class App implements OnInit {
   title = 'LabSeq Calculator';
-  inputValue: number | null = null;
-  result: LabSeqResponse | null = null;
-  error: string | null = null;
-  loading: boolean = false;
-  history: CalculationHistory[] = [];
   apiStatus: string = 'Checking...';
+  history: CalculationHistory[] = [];
   showChart: boolean = false;
-  
 
   constructor(private labseqService: LabseqService) {}
 
@@ -58,60 +46,34 @@ export class App implements OnInit {
     });
   }
 
-  calculate(): void {
-    if (this.inputValue === null || this.inputValue === undefined) {
-      this.error = 'Please enter a valid number';
-      return;
-    }
-
-    if (this.inputValue < 0) {
-      this.error = 'Index must be a non-negative integer';
-      return;
-    }
-
-    if (!Number.isInteger(this.inputValue)) {
-      this.error = 'Index must be an integer';
-      return;
-    }
-
-    this.showChart = false;
-
-    this.error = null;
-    this.loading = true;
-
-    this.labseqService.getLabSeq(this.inputValue).subscribe({
-      next: (response: LabSeqResponse) => {
-        this.result = response;
-        this.loading = false;
-        this.addToHistory(response);
-      },
-      error: (error: Error) => {
-        this.error = error.message;
-        this.result = null;
-        this.loading = false;
-      }
-    });
-  }
-addToHistory(response: LabSeqResponse): void {
-  const historyItem: CalculationHistory = {
-    n: response.n,
-    value: response.value,
-    calculationTime: response.calculationTime,
-    fromCache: response.fromCache,
-    digits: response.digits,
-    timestamp: new Date()
-  };
-
-  this.history = this.history.filter(item => item.n !== response.n);
-  this.history.unshift(historyItem);
-
-  
-  if (this.history.length > 10) {
-    this.history = this.history.slice(0, 10);
+  onResultCalculated(response: LabSeqResponse): void {
+    this.showChart = false; // Fecha o gráfico ao calcular
+    this.addToHistory(response);
   }
 
-  this.saveHistory();
-}
+  addToHistory(response: LabSeqResponse): void {
+    const historyItem: CalculationHistory = {
+      n: response.n,
+      value: response.value,
+      calculationTime: response.calculationTime,
+      fromCache: response.fromCache,
+      digits: response.digits,
+      timestamp: new Date()
+    };
+
+    // Remove duplicatas
+    this.history = this.history.filter(item => item.n !== response.n);
+
+    // Adiciona no início
+    this.history.unshift(historyItem);
+    
+    // Mantém apenas 10 itens
+    if (this.history.length > 10) {
+      this.history = this.history.slice(0, 10);
+    }
+
+    this.saveHistory();
+  }
 
   saveHistory(): void {
     try {
@@ -120,8 +82,6 @@ addToHistory(response: LabSeqResponse): void {
       console.error('Failed to save history', e);
     }
   }
-
-  
 
   loadHistory(): void {
     try {
@@ -138,23 +98,23 @@ addToHistory(response: LabSeqResponse): void {
     }
   }
 
-  clearHistory(): void {
+  onClearHistory(): void {
     this.history = [];
     this.showChart = false;
     localStorage.removeItem('labseq-history');
   }
 
-  reset(): void {
-    this.inputValue = null;
-    this.result = null;
-    this.error = null;
+  onLoadFromHistory(n: number): void {
+    // O Calculator component precisa receber esse valor
+    // Por enquanto, apenas calcula novamente
+    this.labseqService.getLabSeq(n).subscribe({
+      next: (response: LabSeqResponse) => {
+        this.onResultCalculated(response);
+      }
+    });
   }
 
-  loadFromHistory(n: number): void {
-    this.inputValue = n;
-    this.calculate();
+  onToggleChart(): void {
+    this.showChart = !this.showChart;
   }
-
-
-  
 }

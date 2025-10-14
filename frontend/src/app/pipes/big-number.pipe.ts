@@ -44,16 +44,16 @@ export class BigNumberPipe implements PipeTransform {
     }
   }
 
-  /**
-   * Adiciona separadores de milhares
-   */
+ 
+    // Adiciona separadores de milhares
+   
   private addThousandsSeparators(value: string): string {
     return value.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
   }
 
-  /**
-   * Converte para notação científica aproximada
-   */
+ 
+  //  Converte para notação científica aproximada
+   
   private toScientific(value: string): string {
     const numDigits = value.length;
     const mantissa = value.substring(0, 1) + '.' + value.substring(1, 6);

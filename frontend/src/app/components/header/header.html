@@ -1,0 +1,7 @@
+<header class="header">
+  <h1>{{ title }}</h1>
+  <p class="subtitle">Calculate values from the LabSeq sequence</p>
+  <div class="api-status" [class.connected]="apiStatus.includes('✓')" [class.disconnected]="apiStatus.includes('✗')">
+    API Status: {{ apiStatus }}
+  </div>
+</header>

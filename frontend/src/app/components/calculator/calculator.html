@@ -1,0 +1,83 @@
+<div class="card calculator-card">
+  <h2>Calculate LabSeq Value</h2>
+  
+  <div class="info-box">
+    <strong>Sequence Definition:</strong>
+    <ul>
+      <li>l(0) = 0</li>
+      <li>l(1) = 1</li>
+      <li>l(2) = 0</li>
+      <li>l(3) = 1</li>
+      <li>l(n) = l(n-4) + l(n-3) for n > 3</li>
+    </ul>
+  </div>
+
+  <form (ngSubmit)="calculate()" class="calculator-form">
+    <div class="form-group">
+      <label for="indexInput">Enter Index (n):</label>
+      <input
+        type="number"
+        id="indexInput"
+        [(ngModel)]="inputValue"
+        name="indexInput"
+        placeholder="e.g., 10, 100, 1000, 5000..."
+        min="0"
+        step="1"
+        class="form-control"
+        [disabled]="loading"
+      />
+    </div>
+
+    <div class="button-group">
+      <button type="submit" class="btn btn-primary" [disabled]="loading || inputValue === null">
+        @if (!loading) {
+          <span>Calculate</span>
+        } @else {
+          <span>
+            <span class="spinner"></span> Calculating...
+          </span>
+        }
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="reset()" [disabled]="loading">
+        Reset
+      </button>
+    </div>
+  </form>
+
+  @if (error) {
+    <div class="alert alert-error">
+      <strong>⚠️ Error:</strong> {{ error }}
+    </div>
+  }
+
+  @if (result) {
+    <div class="result-container">
+      <h3>📊 Result</h3>
+      <div class="result-card">
+        <div class="result-row">
+          <span class="result-label">Index (n):</span>
+          <span class="result-value">{{ result.n }}</span>
+        </div>
+        
+        <div class="result-row full-width">
+          <span class="result-label">Value:</span>
+          <app-number-display 
+            [value]="result.value" 
+            [digits]="result.digits">
+          </app-number-display>
+        </div>
+        
+        <div class="result-row">
+          <span class="result-label">Calculation Time:</span>
+          <span class="result-value">{{ result.calculationTime }} ms</span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">Source:</span>
+          <span class="result-value" [class.cached]="result.fromCache">
+            {{ result.fromCache ? '📦 From Cache' : '🔄 Fresh Calculation' }}
+          </span>
+        </div>
+      </div>
+    </div>
+  }
+</div>

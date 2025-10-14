@@ -1,14 +1,3 @@
-// Variables
-$primary-color: #007bff;
-$secondary-color: #6c757d;
-$success-color: #28a745;
-$error-color: #dc3545;
-$warning-color: #ffc107;
-$light-bg: #f8f9fa;
-$dark-text: #212529;
-$border-color: #dee2e6;
-
-// Container
 .container {
   max-width: 1400px;
   margin: 0 auto;
@@ -16,47 +5,7 @@ $border-color: #dee2e6;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-// Header
-.header {
-  text-align: center;
-  margin-bottom: 40px;
-  padding: 30px 20px;
-  background: linear-gradient(135deg, $primary-color 0%, #0056b3 100%);
-  color: white;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 
-  h1 {
-    margin: 0 0 10px 0;
-    font-size: 2.5em;
-    font-weight: 600;
-  }
-
-  .subtitle {
-    margin: 0 0 15px 0;
-    font-size: 1.1em;
-    opacity: 0.9;
-  }
-
-  .api-status {
-    display: inline-block;
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-size: 0.9em;
-    font-weight: 500;
-    background: rgba(255, 255, 255, 0.2);
-
-    &.connected {
-      background: rgba(40, 167, 69, 0.3);
-    }
-
-    &.disconnected {
-      background: rgba(220, 53, 69, 0.3);
-    }
-  }
-}
-
-// Main Content - GRID 2 COLUNAS
 .main-content {
   display: grid;
   grid-template-columns: 1fr;
@@ -66,406 +15,43 @@ $border-color: #dee2e6;
   @media (min-width: 992px) {
     grid-template-columns: 1.5fr 1fr;
   }
-}
 
-// Card
-.card {
-  background: white;
-  border-radius: 10px;
-  padding: 30px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  box-sizing: border-box;
-
-  h2 {
-    margin: 0 0 20px 0;
-    color: $dark-text;
-    font-size: 1.5em;
+  app-calculator {
+    grid-column: 1;
   }
-}
 
-// Calculator Card - Coluna 1
-.calculator-card {
-  grid-column: 1;
-}
 
-// History Card - Coluna 2 em desktop
-.history-card {
-  grid-column: 1;
+  app-history {
+    grid-column: 1;
 
-  @media (min-width: 992px) {
-    grid-column: 2;
-    grid-row: 1;
-  }
-}
-
-// Calculator Card Styles
-.calculator-card {
-  .info-box {
-    background: $light-bg;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 25px;
-    border-left: 4px solid $primary-color;
-
-    strong {
-      display: block;
-      margin-bottom: 10px;
-      color: $primary-color;
-    }
-
-    ul {
-      margin: 0;
-      padding-left: 20px;
-
-      li {
-        margin: 5px 0;
-        font-family: 'Courier New', monospace;
-      }
+    @media (min-width: 992px) {
+      grid-column: 2;
+      grid-row: 1;
     }
   }
 
-  .calculator-form {
-    margin-bottom: 25px;
 
-    .form-group {
-      margin-bottom: 20px;
-
-      label {
-        display: block;
-        margin-bottom: 8px;
-        font-weight: 500;
-        color: $dark-text;
-      }
-
-      .form-control {
-        width: 100%;
-        padding: 12px;
-        border: 2px solid $border-color;
-        border-radius: 6px;
-        font-size: 1em;
-        transition: border-color 0.3s;
-
-        &:focus {
-          outline: none;
-          border-color: $primary-color;
-        }
-
-        &:disabled {
-          background: $light-bg;
-          cursor: not-allowed;
-        }
-      }
-    }
-
-    .button-group {
-      display: flex;
-      gap: 10px;
-    }
+  app-sequence-chart {
+    grid-column: 1 / -1;
+    display: block;
+    width: 100%;
+    animation: fadeInUp 0.5s ease-out;
   }
 }
 
-// Buttons
-.btn {
-  padding: 12px 24px;
-  border: none;
-  border-radius: 6px;
-  font-size: 1em;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s;
 
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-
-  &.btn-primary {
-    background: $primary-color;
-    color: white;
-
-    &:hover:not(:disabled) {
-      background: #0056b3;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
-    }
-  }
-
-  &.btn-secondary {
-    background: $secondary-color;
-    color: white;
-
-    &:hover:not(:disabled) {
-      background: #545b62;
-    }
-  }
-
-  &.btn-clear {
-    padding: 8px 16px;
-    background: transparent;
-    color: $error-color;
-    border: 1px solid $error-color;
-    font-size: 0.9em;
-
-    &:hover {
-      background: $error-color;
-      color: white;
-    }
-  }
-}
-
-// Spinner
-.spinner {
-  display: inline-block;
-  width: 12px;
-  height: 12px;
-  border: 2px solid #ffffff;
-  border-radius: 50%;
-  border-top-color: transparent;
-  animation: spin 0.6s linear infinite;
-  margin-right: 6px;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-// Alert
-.alert {
-  padding: 15px;
-  border-radius: 6px;
-  margin-bottom: 20px;
-
-  &.alert-error {
-    background: #f8d7da;
-    color: #721c24;
-    border-left: 4px solid $error-color;
-
-    strong {
-      font-weight: 600;
-    }
-  }
-}
-
-// Result
-.result-container {
-  margin-top: 25px;
-  animation: fadeIn 0.5s;
-
-  h3 {
-    margin: 0 0 15px 0;
-    color: $dark-text;
-  }
-
-  .result-card {
-    background: $light-bg;
-    padding: 20px;
-    border-radius: 8px;
-    border: 2px solid $success-color;
-
-    .result-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 10px 0;
-      border-bottom: 1px solid $border-color;
-
-      &:last-child {
-        border-bottom: none;
-      }
-
-      &.full-width {
-        flex-direction: column;
-        align-items: flex-start;
-        
-        .result-label {
-          margin-bottom: 8px;
-        }
-        
-        app-number-display {
-          width: 100%;
-        }
-      }
-
-      .result-label {
-        font-weight: 500;
-        color: $secondary-color;
-      }
-
-      .result-value {
-        font-weight: 600;
-        color: $dark-text;
-
-        &.highlight {
-          color: $success-color;
-          font-size: 1.2em;
-          font-family: 'Courier New', monospace;
-        }
-
-        &.cached {
-          color: $warning-color;
-        }
-      }
-    }
-  }
-}
-
-// History Card
-.history-card {
-  .history-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-    gap: 12px;
-
-    h2 {
-      margin: 0;
-      font-size: 1.3rem;
-      color: #2c3e50;
-      font-weight: 600;
-    }
-  }
-
-  .history-list {
-
-
-    .history-item {
-      padding: 15px;
-      margin-bottom: 10px;
-      background: $light-bg;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: all 0.3s;
-
-      &:hover {
-        background: #e9ecef;
-        transform: translateX(5px);
-      }
-
-      .history-main {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 8px;
-        gap: 15px;
-
-        .history-index {
-          font-weight: 600;
-          color: $primary-color;
-          white-space: nowrap;
-          min-width: 1px;
-        }
-
-        .history-value {
-          font-size: 0.85rem;
-          color: #495057;
-          flex: 1;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          margin: 0 10px;
-        }
-
-        .history-digits {
-          background: #e3f2fd;
-          color: #1976d2;
-          padding: 2px 8px;
-          border-radius: 12px;
-          font-size: 0.75rem;
-          font-weight: 600;
-          white-space: nowrap;
-
-        }
-      }
-
-      .history-meta {
-        display: flex;
-        gap: 15px;
-        font-size: 0.85em;
-        color: $secondary-color;
-        flex-wrap: wrap;
-
-        .history-time,
-        .history-cache,
-        .history-timestamp {
-          white-space: nowrap;
-        }
-
-        .history-cache {
-          color: $warning-color;
-        }
-      }
-    }
-  }
-}
-
-// Chart Toggle Section - SPAN COMPLETO
-.chart-toggle-section {
-  grid-column: 1 / -1;
-  width: 100%;
-  text-align: center;
-  margin: 30px 0;
-}
-
-.btn-chart-toggle {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border: none;
-  padding: 16px 40px;
-  border-radius: 50px;
-  cursor: pointer;
-  font-weight: 700;
-  font-size: 1.05rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-
-  &:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
-    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-  }
-
-  &:active {
-    transform: translateY(-1px);
-  }
-
-  &.active {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    box-shadow: 0 4px 15px rgba(245, 87, 108, 0.4);
-  }
-
-  &.active:hover {
-    background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
-    box-shadow: 0 6px 20px rgba(245, 87, 108, 0.5);
-  }
-}
-
-// Sequence Chart - SPAN COMPLETO
-app-sequence-chart {
-  grid-column: 1 / -1;
-  display: block;
-  width: 100%;
-  max-width: 100%;
-  margin: 0;
-  animation: fadeInUp 0.5s ease-out;
-}
-
-// Footer
 .footer {
   text-align: center;
   margin-top: 40px;
   padding: 20px;
-  color: $secondary-color;
+  color: #6c757d;
 
   p {
     margin: 0 0 10px 0;
   }
 
   .swagger-link {
-    color: $primary-color;
+    color: #007bff;
     text-decoration: none;
     font-weight: 500;
 
@@ -475,17 +61,6 @@ app-sequence-chart {
   }
 }
 
-// Animations
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 
 @keyframes fadeInUp {
   from {
@@ -498,26 +73,18 @@ app-sequence-chart {
   }
 }
 
-// Responsive
+
 @media (max-width: 991px) {
   .container {
     padding: 15px;
   }
 
-  .header h1 {
-    font-size: 2em;
-  }
-
-  .card {
-    padding: 20px;
-  }
-
   .main-content {
     grid-template-columns: 1fr;
-  }
 
-  .calculator-card,
-  .history-card {
-    grid-column: 1;
+    app-calculator,
+    app-history {
+      grid-column: 1;
+    }
   }
 }
