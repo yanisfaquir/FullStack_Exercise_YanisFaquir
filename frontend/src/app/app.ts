@@ -3,19 +3,26 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { LabseqService, LabSeqResponse } from './services/labseq.service';
+import { NumberDisplayComponent } from './components/number-display/number-display.component';
 
 interface CalculationHistory {
-  index: number;
+  n: number;
   value: string;
-  calculationTimeMs: number;
+  calculationTime: number;
   fromCache: boolean;
+  digits: number;
   timestamp: Date;
 }
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule],
+  imports: [
+    CommonModule, 
+    FormsModule, 
+    HttpClientModule,
+    NumberDisplayComponent
+  ],
   providers: [LabseqService],
   templateUrl: './app.html',
   styleUrls: ['./app.scss']
@@ -36,9 +43,6 @@ export class App implements OnInit {
     this.loadHistory();
   }
 
-  /**
-   * Check if the backend API is available
-   */
   checkApiHealth(): void {
     this.labseqService.checkHealth().subscribe({
       next: () => {
@@ -50,11 +54,7 @@ export class App implements OnInit {
     });
   }
 
-  /**
-   * Calculate LabSeq value
-   */
   calculate(): void {
-    // Validation
     if (this.inputValue === null || this.inputValue === undefined) {
       this.error = 'Please enter a valid number';
       return;
@@ -70,11 +70,9 @@ export class App implements OnInit {
       return;
     }
 
-    // Reset states
     this.error = null;
     this.loading = true;
 
-    // Call API
     this.labseqService.getLabSeq(this.inputValue).subscribe({
       next: (response: LabSeqResponse) => {
         this.result = response;
@@ -89,29 +87,25 @@ export class App implements OnInit {
     });
   }
 
-  /**
-   * Add calculation to history
-   */
   addToHistory(response: LabSeqResponse): void {
     const historyItem: CalculationHistory = {
-      ...response,
+      n: response.n,
+      value: response.value,
+      calculationTime: response.calculationTime,
+      fromCache: response.fromCache,
+      digits: response.digits,
       timestamp: new Date()
     };
 
     this.history.unshift(historyItem);
     
-    // Keep only last 10 items
     if (this.history.length > 10) {
       this.history = this.history.slice(0, 10);
     }
 
-    // Save to localStorage
     this.saveHistory();
   }
 
-  /**
-   * Save history to localStorage
-   */
   saveHistory(): void {
     try {
       localStorage.setItem('labseq-history', JSON.stringify(this.history));
@@ -120,15 +114,11 @@ export class App implements OnInit {
     }
   }
 
-  /**
-   * Load history from localStorage
-   */
   loadHistory(): void {
     try {
       const savedHistory = localStorage.getItem('labseq-history');
       if (savedHistory) {
         this.history = JSON.parse(savedHistory);
-        // Convert timestamp strings back to Date objects
         this.history.forEach(item => {
           item.timestamp = new Date(item.timestamp);
         });
@@ -139,28 +129,19 @@ export class App implements OnInit {
     }
   }
 
-  /**
-   * Clear calculation history
-   */
   clearHistory(): void {
     this.history = [];
     localStorage.removeItem('labseq-history');
   }
 
-  /**
-   * Reset form
-   */
   reset(): void {
     this.inputValue = null;
     this.result = null;
     this.error = null;
   }
 
-  /**
-   * Load value from history
-   */
-  loadFromHistory(index: number): void {
-    this.inputValue = index;
+  loadFromHistory(n: number): void {
+    this.inputValue = n;
     this.calculate();
   }
 }

@@ -5,12 +5,12 @@ import { catchError, retry } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
 export interface LabSeqResponse {
-  index: number;
-  value: string;
-  calculationTimeMs: number;
-  fromCache: boolean;
+  n: number;              
+  value: string;          
+  calculationTime: number; 
+  fromCache: boolean;     
+  digits: number;         
 }
-
 export interface LabSeqError {
   error: string;
   message: string;
@@ -25,11 +25,7 @@ export class LabseqService {
 
   constructor(private http: HttpClient) { }
 
-  /**
-   * Get LabSeq value for a given index
-   * @param n The index in the sequence
-   * @returns Observable with the LabSeq response
-   */
+
   getLabSeq(n: number): Observable<LabSeqResponse> {
     return this.http.get<LabSeqResponse>(`${this.apiUrl}/labseq/${n}`)
       .pipe(
@@ -38,10 +34,7 @@ export class LabseqService {
       );
   }
 
-  /**
-   * Check API health
-   * @returns Observable with health status
-   */
+
   checkHealth(): Observable<any> {
     return this.http.get(`${this.apiUrl}/labseq/health`)
       .pipe(
@@ -49,9 +42,6 @@ export class LabseqService {
       );
   }
 
-  /**
-   * Handle HTTP errors
-   */
   private handleError(error: HttpErrorResponse) {
     let errorMessage = 'An unknown error occurred';
     

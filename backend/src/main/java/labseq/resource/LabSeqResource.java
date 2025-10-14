@@ -26,8 +26,8 @@ public class LabSeqResource {
 
     private static final Logger LOG = Logger.getLogger(LabSeqResource.class);
     
-    // Limite para usar recursão vs iterativo
-    private static final int RECURSIVE_THRESHOLD = 3000;
+    
+    private static final int RECURSIVE_THRESHOLD = 1000;
 
     @Inject
     LabSeqService labSeqService;

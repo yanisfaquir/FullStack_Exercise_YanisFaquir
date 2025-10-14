@@ -33,18 +33,21 @@
             id="indexInput"
             [(ngModel)]="inputValue"
             name="indexInput"
-            placeholder="e.g., 10, 100, 1000..."
+            placeholder="e.g., 10, 100, 1000, 5000..."
             min="0"
             step="1"
             class="form-control"
             [disabled]="loading"
           />
+    
         </div>
 
         <div class="button-group">
           <button type="submit" class="btn btn-primary" [disabled]="loading || inputValue === null">
             <span *ngIf="!loading">Calculate</span>
-            <span *ngIf="loading">Calculating...</span>
+            <span *ngIf="loading">
+              <span class="spinner"></span> Calculating...
+            </span>
           </button>
           <button type="button" class="btn btn-secondary" (click)="reset()" [disabled]="loading">
             Reset
@@ -54,24 +57,30 @@
 
       <!-- Error Message -->
       <div *ngIf="error" class="alert alert-error">
-        <strong>Error:</strong> {{ error }}
+        <strong>⚠️ Error:</strong> {{ error }}
       </div>
 
       <!-- Result -->
       <div *ngIf="result" class="result-container">
-        <h3>Result</h3>
+        <h3>📊 Result</h3>
         <div class="result-card">
           <div class="result-row">
             <span class="result-label">Index (n):</span>
-            <span class="result-value">{{ result.index }}</span>
+            <span class="result-value">{{ result.n }}</span>
           </div>
-          <div class="result-row">
+          
+          <!-- Componente de exibição do número grande -->
+          <div class="result-row full-width">
             <span class="result-label">Value:</span>
-            <span class="result-value highlight">{{ result.value }}</span>
+            <app-number-display 
+              [value]="result.value" 
+             >
+            </app-number-display>
           </div>
+          
           <div class="result-row">
             <span class="result-label">Calculation Time:</span>
-            <span class="result-value">{{ result.calculationTimeMs }} ms</span>
+            <span class="result-value">{{ result.calculationTime }} ms</span>
           </div>
           <div class="result-row">
             <span class="result-label">Source:</span>
@@ -86,18 +95,21 @@
     <!-- History Card -->
     <div class="card history-card" *ngIf="history.length > 0">
       <div class="history-header">
-        <h2>Calculation History</h2>
+        <h2>📜 Calculation History</h2>
         <button class="btn btn-clear" (click)="clearHistory()">Clear History</button>
       </div>
       
       <div class="history-list">
-        <div *ngFor="let item of history" class="history-item" (click)="loadFromHistory(item.index)">
+        <div *ngFor="let item of history" class="history-item" (click)="loadFromHistory(item.n)">
           <div class="history-main">
-            <span class="history-index">n = {{ item.index }}</span>
-            <span class="history-value">{{ item.value }}</span>
+            <span class="history-index">n = {{ item.n }}</span>
+            <span class="history-value" [title]="item.value">
+              {{ item.digits <= 30 ? item.value : (item.value | slice:0:30) + '...' }}
+            </span>
+            <span class="history-digits">{{ item.digits }} digits</span>
           </div>
           <div class="history-meta">
-            <span class="history-time">{{ item.calculationTimeMs }}ms</span>
+            <span class="history-time">⏱️ {{ item.calculationTime }}ms</span>
             <span class="history-cache" *ngIf="item.fromCache">📦 Cached</span>
             <span class="history-timestamp">{{ item.timestamp | date:'short' }}</span>
           </div>
@@ -108,8 +120,8 @@
 
   <!-- Footer -->
   <footer class="footer">
-    <p>LabSeq API - Built with Quarkus & Angular</p>
-    <a href="http://localhost:8080/q/swagger-ui" target="_blank" class="swagger-link">
+    <p>Yanis Marina Faquir</p>
+    <a href="http://localhost:8080/swagger-ui/" target="_blank" class="swagger-link">
       📖 View API Documentation
     </a>
   </footer>
