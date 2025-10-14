@@ -110,7 +110,7 @@
               <div class="history-main">
                 <span class="history-index">n = {{ item.n }}</span>
                 <span class="history-value" [title]="item.value">
-                  {{ item.digits <= 30 ? item.value : (item.value | slice:0:30) + '...' }}
+                  value = {{ item.digits <= 30 ? item.value : (item.value | slice:0:30) + '...' }}
                 </span>
                 <span class="history-digits">{{ item.digits }} digits</span>
               </div>

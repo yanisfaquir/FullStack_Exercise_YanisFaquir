@@ -17,7 +17,7 @@ export class NumberDisplayComponent {
   copied: boolean = false;
 
   viewModes = [
-    { id: 'full' as const, label: 'Full' }
+    { id: 'full' as const, label: 'Full' },
     { id: 'scientific' as const, label: 'Scientific' },
   
   ];

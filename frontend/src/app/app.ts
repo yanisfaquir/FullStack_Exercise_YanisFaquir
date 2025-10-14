@@ -92,25 +92,27 @@ export class App implements OnInit {
       }
     });
   }
+addToHistory(response: LabSeqResponse): void {
+  const historyItem: CalculationHistory = {
+    n: response.n,
+    value: response.value,
+    calculationTime: response.calculationTime,
+    fromCache: response.fromCache,
+    digits: response.digits,
+    timestamp: new Date()
+  };
 
-  addToHistory(response: LabSeqResponse): void {
-    const historyItem: CalculationHistory = {
-      n: response.n,
-      value: response.value,
-      calculationTime: response.calculationTime,
-      fromCache: response.fromCache,
-      digits: response.digits,
-      timestamp: new Date()
-    };
+  // ⬇️ ADICIONE ESTE LOG ⬇️
+  console.log('📊 Adding to history:', historyItem);
 
-    this.history.unshift(historyItem);
-    
-    if (this.history.length > 10) {
-      this.history = this.history.slice(0, 10);
-    }
-
-    this.saveHistory();
+  this.history.unshift(historyItem);
+  
+  if (this.history.length > 10) {
+    this.history = this.history.slice(0, 10);
   }
+
+  this.saveHistory();
+}
 
   saveHistory(): void {
     try {
