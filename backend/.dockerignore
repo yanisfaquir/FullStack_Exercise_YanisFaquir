@@ -1,5 +1,11 @@
-*
-!target/*-runner
-!target/*-runner.jar
-!target/lib/*
-!target/quarkus-app/*
+target/
+.mvn/
+.quarkus/
+*.log
+*.tmp
+.git
+.gitignore
+README.md
+.idea
+.vscode
+*.iml
