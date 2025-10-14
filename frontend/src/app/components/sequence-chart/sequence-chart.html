@@ -1,0 +1,29 @@
+<div class="chart-container">
+  <div class="chart-header">
+    <h3>📈 Sequence Growth Analysis</h3>
+  </div>
+
+  @if (chartData.length === 0) {
+    <div class="empty-state">
+      <p>📊 Calculate some values to see the growth pattern!</p>
+      <small>The chart will show how the sequence grows exponentially</small>
+    </div>
+  } @else {
+    <div class="chart-wrapper">
+      <!-- Growth Chart (sempre visível) -->
+      <div class="chart-content">
+        <div class="chart-info">
+          <span class="info-label">Growth Pattern:</span>
+          <span class="info-value">Exponential (digits ≈ n^0.66)</span>
+        </div>
+        <div class="chart-canvas-wrapper">
+          <canvas baseChart
+            [data]="growthChartData"
+            [options]="growthChartOptions"
+            [type]="lineChartType">
+          </canvas>
+        </div>
+      </div>
+    </div>
+  }
+</div>

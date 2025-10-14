@@ -10,7 +10,7 @@ $border-color: #dee2e6;
 
 // Container
 .container {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 20px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -56,14 +56,15 @@ $border-color: #dee2e6;
   }
 }
 
-// Main Content
+// Main Content - GRID 2 COLUNAS
 .main-content {
   display: grid;
   grid-template-columns: 1fr;
   gap: 30px;
+  width: 100%;
 
-  @media (min-width: 768px) {
-    grid-template-columns: 2fr 1fr;
+  @media (min-width: 992px) {
+    grid-template-columns: 1.5fr 1fr;
   }
 }
 
@@ -73,6 +74,8 @@ $border-color: #dee2e6;
   border-radius: 10px;
   padding: 30px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  box-sizing: border-box;
 
   h2 {
     margin: 0 0 20px 0;
@@ -81,7 +84,22 @@ $border-color: #dee2e6;
   }
 }
 
-// Calculator Card
+// Calculator Card - Coluna 1
+.calculator-card {
+  grid-column: 1;
+}
+
+// History Card - Coluna 2 em desktop
+.history-card {
+  grid-column: 1;
+
+  @media (min-width: 992px) {
+    grid-column: 2;
+    grid-row: 1;
+  }
+}
+
+// Calculator Card Styles
 .calculator-card {
   .info-box {
     background: $light-bg;
@@ -196,6 +214,22 @@ $border-color: #dee2e6;
   }
 }
 
+// Spinner
+.spinner {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spin 0.6s linear infinite;
+  margin-right: 6px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 // Alert
 .alert {
   padding: 15px;
@@ -239,6 +273,19 @@ $border-color: #dee2e6;
         border-bottom: none;
       }
 
+      &.full-width {
+        flex-direction: column;
+        align-items: flex-start;
+        
+        .result-label {
+          margin-bottom: 8px;
+        }
+        
+        app-number-display {
+          width: 100%;
+        }
+      }
+
       .result-label {
         font-weight: 500;
         color: $secondary-color;
@@ -269,9 +316,14 @@ $border-color: #dee2e6;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 12px;
 
     h2 {
       margin: 0;
+      font-size: 1.3rem;
+      color: #2c3e50;
+      font-weight: 600;
     }
   }
 
@@ -295,16 +347,34 @@ $border-color: #dee2e6;
       .history-main {
         display: flex;
         justify-content: space-between;
+        align-items: center;
         margin-bottom: 8px;
+        gap: 10px;
 
         .history-index {
           font-weight: 600;
           color: $primary-color;
+          white-space: nowrap;
         }
 
         .history-value {
           font-family: 'Courier New', monospace;
-          color: $dark-text;
+          font-size: 0.85rem;
+          color: #495057;
+          flex: 1;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .history-digits {
+          background: #e3f2fd;
+          color: #1976d2;
+          padding: 2px 8px;
+          border-radius: 12px;
+          font-size: 0.75rem;
+          font-weight: 600;
+          white-space: nowrap;
         }
       }
 
@@ -313,6 +383,13 @@ $border-color: #dee2e6;
         gap: 15px;
         font-size: 0.85em;
         color: $secondary-color;
+        flex-wrap: wrap;
+
+        .history-time,
+        .history-cache,
+        .history-timestamp {
+          white-space: nowrap;
+        }
 
         .history-cache {
           color: $warning-color;
@@ -320,6 +397,59 @@ $border-color: #dee2e6;
       }
     }
   }
+}
+
+// Chart Toggle Section - SPAN COMPLETO
+.chart-toggle-section {
+  grid-column: 1 / -1;
+  width: 100%;
+  text-align: center;
+  margin: 30px 0;
+}
+
+.btn-chart-toggle {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 16px 40px;
+  border-radius: 50px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 1.05rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+  }
+
+  &:active {
+    transform: translateY(-1px);
+  }
+
+  &.active {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    box-shadow: 0 4px 15px rgba(245, 87, 108, 0.4);
+  }
+
+  &.active:hover {
+    background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
+    box-shadow: 0 6px 20px rgba(245, 87, 108, 0.5);
+  }
+}
+
+// Sequence Chart - SPAN COMPLETO
+app-sequence-chart {
+  grid-column: 1 / -1;
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  animation: fadeInUp 0.5s ease-out;
 }
 
 // Footer
@@ -356,63 +486,37 @@ $border-color: #dee2e6;
   }
 }
 
-// Estilos para hint do input
-.hint {
-  display: block;
-  margin-top: 4px;
-  font-size: 0.85rem;
-  color: #6c757d;
-  font-style: italic;
-}
-
-// Spinner de loading
-.spinner {
-  display: inline-block;
-  width: 12px;
-  height: 12px;
-  border: 2px solid #ffffff;
-  border-radius: 50%;
-  border-top-color: transparent;
-  animation: spin 0.6s linear infinite;
-  margin-right: 6px;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-// Result row full width para o número grande
-.result-row.full-width {
-  flex-direction: column;
-  align-items: flex-start;
-  
-  .result-label {
-    margin-bottom: 8px;
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
   }
-  
-  app-number-display {
-    width: 100%;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-// Estilos para history com digits
-.history-digits {
-  background: #e3f2fd;
-  color: #1976d2;
-  padding: 2px 8px;
-  border-radius: 12px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  margin-left: 8px;
-}
+// Responsive
+@media (max-width: 991px) {
+  .container {
+    padding: 15px;
+  }
 
-.history-value {
-  font-family: 'Courier New', monospace;
-  font-size: 0.85rem;
-  color: #495057;
-  flex: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
+  .header h1 {
+    font-size: 2em;
+  }
 
+  .card {
+    padding: 20px;
+  }
+
+  .main-content {
+    grid-template-columns: 1fr;
+  }
+
+  .calculator-card,
+  .history-card {
+    grid-column: 1;
+  }
+}

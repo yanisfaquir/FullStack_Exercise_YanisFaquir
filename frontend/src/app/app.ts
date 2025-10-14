@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { LabseqService, LabSeqResponse } from './services/labseq.service';
 import { NumberDisplayComponent } from './components/number-display/number-display.component';
+import { SequenceChartComponent } from './components/sequence-chart/sequence-chart.component';
 
 interface CalculationHistory {
   n: number;
@@ -21,7 +22,8 @@ interface CalculationHistory {
     CommonModule, 
     FormsModule, 
     HttpClientModule,
-    NumberDisplayComponent
+    NumberDisplayComponent, 
+    SequenceChartComponent
   ],
   providers: [LabseqService],
   templateUrl: './app.html',
@@ -35,6 +37,8 @@ export class App implements OnInit {
   loading: boolean = false;
   history: CalculationHistory[] = [];
   apiStatus: string = 'Checking...';
+  showChart: boolean = false;
+  
 
   constructor(private labseqService: LabseqService) {}
 
@@ -69,6 +73,8 @@ export class App implements OnInit {
       this.error = 'Index must be an integer';
       return;
     }
+
+    this.showChart = false;
 
     this.error = null;
     this.loading = true;
@@ -114,6 +120,8 @@ export class App implements OnInit {
     }
   }
 
+  
+
   loadHistory(): void {
     try {
       const savedHistory = localStorage.getItem('labseq-history');
@@ -131,6 +139,7 @@ export class App implements OnInit {
 
   clearHistory(): void {
     this.history = [];
+    this.showChart = false;
     localStorage.removeItem('labseq-history');
   }
 
@@ -144,4 +153,7 @@ export class App implements OnInit {
     this.inputValue = n;
     this.calculate();
   }
+
+
+  
 }
