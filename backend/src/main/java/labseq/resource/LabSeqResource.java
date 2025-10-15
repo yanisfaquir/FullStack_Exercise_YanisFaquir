@@ -2,6 +2,7 @@ package labseq.resource;
 
 import labseq.model.LabSeqResponse;
 import labseq.service.LabSeqService;
+import labseq.exception.InvalidIndexException;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -20,17 +21,16 @@ import org.jboss.logging.Logger;
 
 import java.math.BigInteger;
 
+
 @Path("/labseq")
 @Tag(name = "LabSeq", description = "LabSeq sequence calculation endpoints")
 public class LabSeqResource {
 
     private static final Logger LOG = Logger.getLogger(LabSeqResource.class);
-    
-    
-    private static final int RECURSIVE_THRESHOLD = 1000;
 
     @Inject
     LabSeqService labSeqService;
+
 
     @GET
     @Path("/{n}")
@@ -39,7 +39,7 @@ public class LabSeqResource {
         summary = "Get LabSeq value",
         description = "Calculates and returns the value of the LabSeq sequence at the given index. " +
                      "Uses caching to improve performance for repeated calculations. " +
-                     "Automatically switches to iterative method for large values (n > 5000)."
+                     "Formula: l(n) = l(n-4) + l(n-3) for n > 3"
     )
     @APIResponses(value = {
         @APIResponse(
@@ -69,37 +69,44 @@ public class LabSeqResource {
     ) {
         LOG.infof("Received request for LabSeq with n=%d", n);
 
-        long startTime = System.currentTimeMillis();
-        
-        BigInteger value;
-        boolean usedIterative = false;
-        
-        // Escolhe método baseado no tamanho de n
-        if (n > RECURSIVE_THRESHOLD) {
-            LOG.infof("Using iterative method for large n=%d", n);
-            value = labSeqService.calculateIterative(n);
-            usedIterative = true;
-        } else {
-            // Para valores pequenos, usa recursão com cache
-            value = labSeqService.calculate(n);
+        try {
+            long startTime = System.currentTimeMillis();
+            
+            // Delega o cálculo para o Service
+            BigInteger value = labSeqService.calculate(n);
+            
+            long endTime = System.currentTimeMillis();
+            long calculationTime = endTime - startTime;
+
+            // Determina se usou iterativo (para informação)
+            boolean usedIterative = labSeqService.shouldUseIterative(n);
+
+            // Cria response
+            LabSeqResponse response = new LabSeqResponse(
+                n,
+                value,
+                calculationTime,
+                calculationTime < 5 && !usedIterative // Heurística: cache hit
+            );
+
+            LOG.infof("LabSeq(%d) calculated in %dms (method: %s)", 
+                n, calculationTime, usedIterative ? "iterative" : "recursive+cache");
+
+            return Response.ok(response).build();
+
+        } catch (InvalidIndexException e) {
+            LOG.warnf("Invalid request: %s", e.getMessage());
+            return Response.status(Response.Status.BAD_REQUEST)
+                .entity("{\"error\":\"" + e.getMessage() + "\"}")
+                .build();
+        } catch (Exception e) {
+            LOG.errorf(e, "Error calculating LabSeq for n=%d", n);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                .entity("{\"error\":\"Internal server error\"}")
+                .build();
         }
-        
-        long endTime = System.currentTimeMillis();
-        long calculationTime = endTime - startTime;
-
-        // Create response
-        LabSeqResponse response = new LabSeqResponse(
-            n,
-            value,
-            calculationTime,
-            calculationTime < 5 && !usedIterative // Heuristic: if calculated in < 5ms and not iterative, likely from cache
-        );
-
-        LOG.infof("LabSeq(%d) = %s (calculated in %dms, method: %s)", 
-            n, value, calculationTime, usedIterative ? "iterative" : "recursive+cache");
-
-        return Response.ok(response).build();
     }
+
 
     @GET
     @Path("/health")
