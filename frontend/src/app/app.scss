@@ -1,0 +1,90 @@
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+
+.main-content {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 30px;
+  width: 100%;
+
+  @media (min-width: 992px) {
+    grid-template-columns: 1.5fr 1fr;
+  }
+
+  app-calculator {
+    grid-column: 1;
+  }
+
+
+  app-history {
+    grid-column: 1;
+
+    @media (min-width: 992px) {
+      grid-column: 2;
+      grid-row: 1;
+    }
+  }
+
+
+  app-sequence-chart {
+    grid-column: 1 / -1;
+    display: block;
+    width: 100%;
+    animation: fadeInUp 0.5s ease-out;
+  }
+}
+
+
+.footer {
+  text-align: center;
+  margin-top: 40px;
+  padding: 20px;
+  color: #6c757d;
+
+  p {
+    margin: 0 0 10px 0;
+  }
+
+  .swagger-link {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 500;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+@media (max-width: 991px) {
+  .container {
+    padding: 15px;
+  }
+
+  .main-content {
+    grid-template-columns: 1fr;
+
+    app-calculator,
+    app-history {
+      grid-column: 1;
+    }
+  }
+}

@@ -1,0 +1,37 @@
+<div class="card history-card">
+  <div class="history-header">
+    <h2>📜 Calculation History</h2>
+    <button class="btn btn-clear" (click)="clearHistory()">Clear History</button>
+  </div>
+  
+  <div class="history-list">
+    @for (item of history; track item.timestamp) {
+      <div class="history-item" (click)="loadFromHistory(item.n)">
+        <div class="history-main">
+          <span class="history-index">n = {{ item.n }}</span>
+          <span class="history-value" [title]="item.value">
+            value = {{ item.digits <= 30 ? item.value : (item.value | slice:0:30) + '...' }}
+          </span>
+          <span class="history-digits">{{ item.digits }} digits</span>
+        </div>
+        <div class="history-meta">
+          <span class="history-time">⏱️ {{ item.calculationTime }}ms</span>
+          @if (item.fromCache) {
+            <span class="history-cache">📦 Cached</span>
+          }
+          <span class="history-timestamp">{{ item.timestamp | date:'short' }}</span>
+        </div>
+      </div>
+    }
+  </div>
+</div>
+
+<!-- Chart Toggle Button -->
+<div class="chart-toggle-section">
+  <button 
+    class="btn btn-chart-toggle" 
+    (click)="toggleChart()"
+    [class.active]="showChart">
+    {{ showChart ? '📉 Hide Chart Analysis' : '📊 Show Chart Analysis' }}
+  </button>
+</div>

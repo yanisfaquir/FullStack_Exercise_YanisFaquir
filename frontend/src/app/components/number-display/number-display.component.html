@@ -1,0 +1,30 @@
+<div class="number-display">
+  <!-- Informações sobre o número -->
+  <div class="number-info">
+    <span class="info-badge">
+      <strong>{{ digits }}</strong> digits
+    </span>
+    @if (digits > 50) {
+      <span class="info-badge">
+        <strong>{{ formatBytes(digits) }}</strong> size
+      </span>
+    }
+  </div>
+
+  <!-- Abas de visualização -->
+  <div class="view-tabs">
+    @for (mode of viewModes; track mode.id) {
+      <button 
+        [class.active]="currentMode === mode.id"
+        (click)="currentMode = mode.id"
+        class="tab-btn">
+        {{ mode.label }}
+      </button>
+    }
+  </div>
+
+  <!-- Valor formatado -->
+  <div class="number-value" [ngClass]="'mode-' + currentMode">
+    <code>{{ value | bigNumber:currentMode }}</code>
+  </div>
+</div>
